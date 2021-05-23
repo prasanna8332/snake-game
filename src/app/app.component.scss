@@ -1,0 +1,10 @@
+.main {
+    width: 14%;
+    flex-wrap: wrap;
+    display: flex;
+
+    .check-box-enclose {
+        display: flex;
+        flex-direction: row;
+    }
+}
