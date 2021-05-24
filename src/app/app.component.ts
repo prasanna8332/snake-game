@@ -15,16 +15,18 @@ export class AppComponent implements OnInit {
     { turn: true, id: 2 },
     { turn: true, id: 3 },
   ];
+  groundSize = 1260;
+  snakeSpeed = 100;
 
   ngOnInit() {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < this.groundSize; i++) {
       this.snakeGround.push({ turn: false, id: i });
     }
     console.log(this.snakeGround);
     this.snakeGround[this.headPosition.id].turn = true;
     setInterval(() => {
       this.startGame();
-    }, 200)
+    }, this.snakeSpeed)
   }
 
   startGame(): void {
@@ -33,7 +35,7 @@ export class AppComponent implements OnInit {
     this.snakePositions.push(nextPosition);
     this.headPosition = nextPosition;
     this.snakePositions.shift();
-    if (this.snakePositions[this.snakePositions.length - 1].id === 51) {
+    if (this.snakePositions[this.snakePositions.length - 1].id === this.snakeGround.length) {
       this.snakePositions = [
         { turn: true, id: 0 },
         { turn: true, id: 1 },
