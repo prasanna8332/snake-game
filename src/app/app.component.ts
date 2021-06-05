@@ -14,19 +14,20 @@ export enum KEY_CODE {
 export class AppComponent implements OnInit {
   title = 'snake-game-prasanna';
   groundSize = 130;
-  snakeSpeed = 200;
-  headPosition = { turn: true, id: 3 };
+  snakeSpeed = 1500;
+  headPosition = { turn: true, id: 19 };
   nextPosition = 0;
   onGoingGame: any;
+  outline = new Map();
   snakeDirection = "ArrowRight";
   snakeGround: Array<{ turn: boolean; id: number }> = [];
   snakePositions = [
-    { turn: true, id: 0 },
-    { turn: true, id: 1 },
-    { turn: true, id: 2 },
-    { turn: true, id: 3 },
-    { turn: true, id: 4 },
-    { turn: true, id: 5 },
+    { turn: true, id: 14 },
+    { turn: true, id: 15, color: "primary" },
+    { turn: true, id: 16 },
+    { turn: true, id: 16 },
+    { turn: true, id: 18 },
+    { turn: true, id: 19 },
   ];
 
   ngOnInit() {
@@ -35,7 +36,25 @@ export class AppComponent implements OnInit {
   }
 
   makeOutLine() {
-    console.log("This is for making an outline around the map");
+    const width = 13;
+    const height = 10;
+
+    const bottomLineInitValue = (width * (height - 1)) + 1
+
+    for (let i = 0; i < (width * height); i++) {
+      if (i < width || i >= bottomLineInitValue) {
+        this.outline.set(i, true);
+      } else {
+        const reminder = i % width
+        if (reminder == 0 || reminder == width - 1) {
+          this.outline.set(i, true);
+        } else {
+          this.outline.set(i, false);
+        }
+      }
+    }
+
+
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -85,11 +104,14 @@ export class AppComponent implements OnInit {
   }
 
   validateSnakeSelfBite() {
-    const position = this.getNextPosition();
-    if(this.snakePositions.map(position => position.id).includes(position.id)) {
+    if (this.snakePositions.map(position => position.id).includes(this.getNextPosition().id) || this.outline.get(this.headPosition.id)) {
       window.alert("game over da thambi");
     }
   }
+  
+  // validateOnOutline(position: number): boolean {
+  //   return this.outline.get(position);
+  // }
 
 
   makeGround(): void {
@@ -100,6 +122,7 @@ export class AppComponent implements OnInit {
 
   startGame(): void {
     const snakePositionsIds = this.calculateTheSnakePositions();
+    this.validateSnakeSelfBite();
     this.resetTheGame();
     this.turnSnakePositionsOn(snakePositionsIds);
   }
